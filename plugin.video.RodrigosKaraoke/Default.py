@@ -15,59 +15,94 @@
 
 
 #    xbmc.Player(xbmc.PLAYER_CORE_PAPLAYER).play(ContentPath)
-import re, os
-import xbmcplugin,xbmcgui
-
+import re
+import os
+import xbmcplugin
+import xbmcgui
 import xbmc
 import xbmcaddon
 import buggalo
 import urllib
 import urllib2
 import shutil
+import zipfile
 
 # Official XBMC error report generator (won't send data without user confirmation)
 buggalo.SUBMIT_URL = 'http://buggalo.rodrigo.be/submit.php'
 
-addon = xbmcaddon.Addon('plugin.video.RodrigosKaraoke')
+# initialization
+ADDON_NAME = 'plugin.video.RodrigosKaraoke'
+ADDON_READABLENAME = 'Rodrigo\'s Karaoke Addon'
+addon = xbmcaddon.Addon(ADDON_NAME)
+PATH = xbmc.translatePath(addon.getAddonInfo('path')).decode('utf-8')
+#TEMP_PATH = 'special://temp\\' + ADDON_NAME
+#TEMP_PATH = 'special://temp'
+TEMP_DL_DIR =  'tempdl'
+url = None
 
 baseurl = 'http://partyanimals.be/karaoke/'
-filename = 'SFPL001-04 - All Saints - Bootie Call.zip'
+filename = 'SFPL001-02 - All Saints - Never Ever.zip'
 
-
-def dlfile(file_name,file_mode,base_url):
-    from urllib2 import Request, urlopen, URLError, HTTPError
-
-    #create the url and the request
-    url = base_url + file_name + mid_url + file_name + end_url 
-    req = Request(url)
-
-    # Open the url
+def _pbhook(numblocks, blocksize, filesize, url=None,dp=None):
+    # Progress bar hook
     try:
-        f = urlopen(req)
-        print "downloading " + url
+        percent = min((numblocks*blocksize*100)/filesize, 100)
+        #print percent
+        dp.update(percent)
+    except:
+        percent = 100
+        dp.update(percent)
+    if dp.iscanceled(): 
+        print "DOWNLOAD CANCELLED" # need to get this part working        
+        raise Exception("Canceled")
 
-        # Open our local file for writing
-        local_file = open(file_name, "wb" + file_mode)
-        #Write to our local file
-        local_file.write(f.read())
-        local_file.close()
-
-    #handle errors
-    except HTTPError, e:
-        print "HTTP Error:",e.code , url
-    except URLError, e:
-        print "URL Error:",e.reason , url
-
-try:
- 
-    print (xbmc.translatePath(addon.getAddonInfo('path')).decode('utf-8') )
-
-    #dlfile(
+def getunzipped(theurl, thedir, thename):
+    name = os.path.join(thedir, thename)
+    try:
+        if not os.path.exists(thedir):
+            os.makedirs(thedir)
+    except Exception:
+        buggalo.onExceptionRaised()
+        print "can't create directory"
+        return
+    try:
+        dp = xbmcgui.DialogProgress()
+        dp.create(ADDON_READABLENAME,"Downloading clip data", thename)
+        name, hdrs = urllib.urlretrieve(theurl, name,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))
+    except IOError, e:
+        buggalo.onExceptionRaised()
+        print "Can't retrieve %r to %r: %s" % (theurl, thedir, e)
+        return
+    # Python unzip is rubbish!!! gave me corrupted unzips every time
+    xbmc.executebuiltin('xbmc.extract(' + name + ')')
     
+    # Remove the zip file
+    os.unlink(name)
 
-    print (urllib.quote(filename).encode('utf8'))
-    ContentPath = 'special://home/media/SFHH01-1/test.mp3'
-    #xbmc.Playerd().play(ContentPath)
+    
+def deletedir(dirname):
+    try:
+        if os.path.exists(dirname):
+            shutil.rmtree(dirname)
+    except:
+        buggalo.onExceptionRaised()
+        print "can't delete directory"
+        
+try:
+    fullURL = baseurl + urllib.quote(filename).encode('utf8')
+    fullDir = os.path.join(PATH, TEMP_DL_DIR)
+    
+    #delete directory
+    deletedir(fullDir)
+ 
+    #download new file
+    getunzipped(fullURL, fullDir, filename)
+
+    fullFilePath = os.path.splitext(os.path.join(fullDir, filename))[0]
+    fullFilePath = fullFilePath + '.mp3'
+    
+    #ContentPath = 'special://home/media/SFHH01-1/test.mp3'
+    xbmc.Player().play(fullFilePath)
     
 except Exception as e:
     buggalo.onExceptionRaised()

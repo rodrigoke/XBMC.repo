@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addons>
-	<addon id="plugin.video.RodrigosKaraoke" name="Rodrigo's Karaoke" version="1.0.0" provider-name="Rodrigo">
+	<addon id="plugin.video.RodrigosKaraoke" name="Rodrigo's Karaoke" version="1.0.1" provider-name="Rodrigo">
 		<requires>
 			<import addon="xbmc.python" version="2.0"/>
             <import addon="script.module.buggalo" version="1.1.5" />
