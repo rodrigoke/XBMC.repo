@@ -72,7 +72,8 @@ class Generator:
                     zip.write(os.path.join(root, file))
             zip.close()
             if os.path.isfile(zippath + "\\" + addonid + "\\" + filename):
-                os.rename(zippath + "\\" + addonid + "\\" + filename, zippath + "\\" + addonid + "\\" + filename + "." + datetime.datetime.now().strftime("%Y%m%d%H%M%S") )
+                os.unlink(zippath + "\\" + addonid + "\\" + filename)
+#                os.rename(zippath + "\\" + addonid + "\\" + filename, zippath + "\\" + addonid + "\\" + filename + "." + datetime.datetime.now().strftime("%Y%m%d%H%M%S") )
             shutil.move(filename, zippath + "\\" + addonid + "\\")
         except Exception, e:
             print e

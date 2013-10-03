@@ -77,7 +77,7 @@ def getunzipped(theurl, thedir, thename):
     xbmc.executebuiltin('xbmc.extract(' + name + ')')
     
     # Remove the zip file
-    os.unlink(name)
+    #os.unlink(name)
 
     
 def deletedir(dirname):
