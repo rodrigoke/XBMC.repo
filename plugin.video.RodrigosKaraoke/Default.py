@@ -23,9 +23,9 @@ import xbmc
 import xbmcaddon
 import buggalo
 import urllib
-import urllib2
 import shutil
 import zipfile
+import urlresolver
 
 # Official XBMC error report generator (won't send data without user confirmation)
 buggalo.SUBMIT_URL = 'http://buggalo.rodrigo.be/submit.php'
@@ -40,8 +40,15 @@ PATH = xbmc.translatePath(addon.getAddonInfo('path')).decode('utf-8')
 TEMP_DL_DIR =  'tempdl'
 url = None
 
-baseurl = 'http://partyanimals.be/karaoke/'
-filename = 'SFPL001-02 - All Saints - Never Ever.zip'
+#baseurl = 'http://partyanimals.be/karaoke/'
+#filename = 'SFPL001-02 - All Saints - Never Ever.zip'
+baseurl = 'http://www48.zippyshare.com/d/69120851/68924/'
+filename = 'SFPL024-12 - Sham 69 - If The Kids Are United.zip'
+
+
+
+print('KARAOKE')
+print( xbmc.getCondVisibility('system.getbool(karaoke.enabled)'))
 
 def _pbhook(numblocks, blocksize, filesize, url=None,dp=None):
     # Progress bar hook
@@ -66,18 +73,20 @@ def getunzipped(theurl, thedir, thename):
         print "can't create directory"
         return
     try:
-        dp = xbmcgui.DialogProgress()
-        dp.create(ADDON_READABLENAME,"Downloading clip data", thename)
-        name, hdrs = urllib.urlretrieve(theurl, name,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))
+        if urlresolver.HostedMediaFile(theurl).valid_url():
+            resolvedurl = urlresolver.resolve(theurl)
+            dp = xbmcgui.DialogProgress()
+            dp.create(ADDON_READABLENAME,"Downloading clip data", thename)
+            name, hdrs = urllib.urlretrieve(resolvedurl, name,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))
     except IOError, e:
         buggalo.onExceptionRaised()
-        print "Can't retrieve %r to %r: %s" % (theurl, thedir, e)
+        print "Can't retrieve %r to %r: %s" % (resolvedurl, thedir, e)
         return
     # Python unzip is rubbish!!! gave me corrupted unzips every time
-    xbmc.executebuiltin('xbmc.extract(' + name + ')')
+    xbmc.executebuiltin('xbmc.extract(' + name + ')', True)
     
     # Remove the zip file
-    #os.unlink(name)
+    os.unlink(name)
 
     
 def deletedir(dirname):
@@ -101,7 +110,7 @@ try:
     fullFilePath = os.path.splitext(os.path.join(fullDir, filename))[0]
     fullFilePath = fullFilePath + '.mp3'
     
-    #ContentPath = 'special://home/media/SFHH01-1/test.mp3'
+
     xbmc.Player().play(fullFilePath)
     
 except Exception as e:

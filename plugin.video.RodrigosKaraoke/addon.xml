@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<addon id="plugin.video.RodrigosKaraoke" name="Rodrigo's Karaoke" version="1.0.2" provider-name="Rodrigo">
+	<addon
+        id="plugin.video.RodrigosKaraoke" 
+        name="Rodrigo's Karaoke" 
+        version="1.0.3" 
+        provider-name="Rodrigo">
 		<requires>
-			<import addon="xbmc.python" version="2.0"/>
-            <import addon="script.module.buggalo" version="1.1.5" />
-			<import addon="xbmc.addon" version="12.0.0"/> 
+			<import addon="xbmc.python"             	version="2.0"/>
+            <import addon="script.module.buggalo"   	version="1.1.5" />
+			<import addon="xbmc.addon"              	version="12.0.0"/>
+			<import addon="script.module.urlresolver"	version="1.1.0"/>
 		</requires>
 		<extension point="xbmc.python.pluginsource" library="Default.py">
-			<provides>video</provides>
+			<provides>audio video</provides>
 		</extension>
 		<extension point="xbmc.addon.metadata">
 			<summary lang="en">Rodrigo's Karaoke</summary>
-			<description lang="en">Rodrigo's Karaoke</description>
-			<license>GPL 3.0</license>
-			<platform>all</platform>
-		</extension>
+			<description lang="en">Rodrigo's Karaoke developed by Rodrigo.[CR]For support, please visit the XBMCHUB forums.[CR][CR]Powered by [COLOR blue][B]XBMCHUB[/B].com[/COLOR]</description>
+            <disclaimer lang="en">For bugs, requests or general questions contact Rodrigo on the XBMCHUB forum.</disclaimer>
+            <platform>all</platform>
+			<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+            <language>en</language>
+            <forum>http://www.xbmchub.com/forums/</forum>
+            <website>http://www.xbmchub.com/</website>
+            <email></email>
+            <source>https://github.com/rodrigoke/XBMC.repo/tree/master/plugin.video.RodrigosKaraoke</source>
+        </extension>
 	</addon>

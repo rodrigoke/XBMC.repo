@@ -7,7 +7,7 @@
 
 
 import os
-import md5
+import hashlib
 import zipfile
 import shutil
 from xml.dom import minidom
@@ -112,10 +112,20 @@ class Generator:
 
     def _generate_md5_file( self ):
         try:
+###################### Deprecated md5 lib BEGIN ######################            
             # create a new md5 hash
-            m = md5.new( open( "addons.xml" ).read() ).hexdigest()
+#            m = md5.new( open( "addons.xml" ).read() ).hexdigest()     
             # save file
-            self._save_file( m, file="addons.xml.md5" )
+#            self._save_file( m, file="addons.xml.md5" )
+###################### Deprecated md5 lib END ######################
+
+            # create a new md5 hash
+            m=hashlib.md5(open( "addons.xml" ).read())
+            # save file
+            print m.hexdigest()
+            self._save_file( m.hexdigest(), file="addons.xml.md5" )
+            
+
         except Exception, e:
             # oops
             print "An error occurred creating addons.xml.md5 file!\n%s" % ( e, )
