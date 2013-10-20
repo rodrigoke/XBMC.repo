@@ -82,6 +82,7 @@ class StopDownloading(Exception):
         return repr(self.value)
             
 def art(name):
+    if '#' in name: name=name.replace('#','0');
     art_img = os.path.join(THEME_PATH, name + ".jpg")
     return art_img
     
