@@ -5,7 +5,7 @@
         version="1.0.0" 
         provider-name="Rodrigo">
 		<requires>
-			<import addon="xbmc.python"             	version="1.0"/>
+			<import addon="xbmc.python.script"          version="1.0"/>
             <import addon="script.module.buggalo"   	version="1.1.5" />
 			<import addon="xbmc.addon"              	version="12.0.0"/>
 			<import addon="script.module.urlresolver"	version="1.1.0"/>
