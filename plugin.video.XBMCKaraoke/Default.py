@@ -297,7 +297,7 @@ def KARAOKELINKS(url, id, tempkey):
         print (e)
 
 def HOME():
-    addDir(__language__(70000), 'search.php', 'searchArtists',  art('searchArtists'), '0',0, '')
+    addDir(__language__(70000), 'search.php', 'searchArtists',  art('searchArtistName'), '0',0, '')
     addDir(__language__(70001), 'search.php', 'searchSongs',    art('SearchSongName'), '0',0, '')
     addDir(__language__(70002), 'search.php', 'searchIDs',      art('SearchListID'), '0',0, '')
     addDir(__language__(70003), 'search.php', 'browseArtistsListSub',  art('BrowseAllArtists'), '0',0, '')
