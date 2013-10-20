@@ -2,7 +2,7 @@
 	<addon 
         id="repository.Rodrigo" 
         name="Rodrigo's Repository" 
-        version="1.0.0" 
+        version="1.0.1" 
         provider-name="Rodrigo">
 		<extension point="xbmc.addon.repository" name="Rodrigo's addon repository">
 			<info compressed="false">http://github.com/Rodrigoke/XBMC.repo/raw/master/addons.xml</info>
