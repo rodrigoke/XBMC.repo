@@ -82,10 +82,9 @@ class StopDownloading(Exception):
         return repr(self.value)
             
 def art(name):
-    if '#' in name: name=name.replace('#','0'); 
     art_img = os.path.join(THEME_PATH, name + ".jpg")
     return art_img
-
+    
 def _pbhook(numblocks, blocksize, filesize, dlg, start_time):
     try:
         percent = min(numblocks * blocksize * 100 / filesize, 100)

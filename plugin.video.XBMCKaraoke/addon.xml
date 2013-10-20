@@ -5,8 +5,8 @@
         version="1.0.0" 
         provider-name="Rodrigo">
 		<requires>
-			<import addon="xbmc.python.script"          version="1.0"/>
-            <import addon="script.module.buggalo"   	version="1.1.5" />
+			<import addon="xbmc.python"             	version="1.0.0"/>
+			<import addon="script.module.buggalo"   	version="1.1.5" />
 			<import addon="xbmc.addon"              	version="12.0.0"/>
 			<import addon="script.module.urlresolver"	version="1.1.0"/>
 			<import addon="script.module.simplejson"	version="2.0.10"/>
@@ -17,13 +17,13 @@
 		<extension point="xbmc.addon.metadata">
 			<summary lang="en">XBMC Karaoke addon</summary>
 			<description lang="en">XBMC Karaoke addon developed by Rodrigo.[CR]For support, please visit the XBMCHUB forums.[CR][CR]Powered by [COLOR blue][B]XBMCHUB[/B].com[/COLOR]</description>
-            <disclaimer lang="en">For bugs, requests or general questions contact Rodrigo on the XBMCHUB forum.</disclaimer>
-            <platform>all</platform>
+			<disclaimer lang="en">For bugs, requests or general questions contact Rodrigo on the XBMCHUB forum.</disclaimer>
+			<platform>all</platform>
 			<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-            <language>en</language>
-            <forum>http://www.xbmchub.com/forums/</forum>
-            <website>http://www.xbmchub.com/</website>
-            <email></email>
-            <source>https://github.com/rodrigoke/XBMC.repo/tree/master/plugin.video.XBMCKaraoke</source>
-        </extension>
+			<language>en</language>
+			<forum>http://www.xbmchub.com/forums/</forum>
+			<website>http://www.xbmchub.com/</website>
+			<email></email>
+			<source>https://xbmc-repo.googlecode.com/git/plugin.video.XBMCKaraoke/</source>
+		</extension>
 	</addon>
