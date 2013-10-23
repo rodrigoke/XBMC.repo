@@ -27,11 +27,18 @@ from t0mm0.common.addon import Addon
 
 
 #### Special Imports
-if sys.version_info >=  (2, 7):                                                 # If we are using Python 2.7, use the internal JSON plugin
-    import _json                                                                # Otherwise, use the simplejson external plugin
-else:
-    import simplejson as _json 
+#if sys.version_info >=  (2, 7):                                                 # If we are using Python 2.7, use the internal JSON plugin
+#    import _json                                                                # Otherwise, use the simplejson external plugin
+#else:
+#    import simplejson as _json 
 
+## XBMC workaround
+import _json
+if not 'load' in dir(_json):
+    import simplejson as _json
+    
+    
+    
 
 
 #### Constants & initialization

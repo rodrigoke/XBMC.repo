@@ -3,7 +3,7 @@
 	<addon
         id="plugin.video.XBMCKaraoke"
         name="XBMC Karaoke addon"
-        version="1.0.1"
+        version="1.0.2"
         provider-name="Rodrigo">
 		<requires>
 			<import addon="xbmc.python"             	version="1.0.0"/>
@@ -25,7 +25,7 @@
 			<forum>http://www.xbmchub.com/forums/</forum>
 			<website>http://www.xbmchub.com/</website>
 			<email></email>
-			<source>https://xbmc-repo.googlecode.com/git/plugin.video.XBMCKaraoke/</source>
+			<source>https://github.com/rodrigoke/XBMC.repo/tree/master/plugin.video.XBMCKaraoke/</source>
 		</extension>
 	</addon>
 
