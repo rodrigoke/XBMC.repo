@@ -1,0 +1,13 @@
+v0.1.0
+- Beta release
+- Added personalized artwork
+
+v0.0.3
+- Added first playlist draft
+
+v0.0.2
+- Enhanced regex for filesearch
+- Added hosts to exclude
+
+v0.0.1
+- Alpha release
