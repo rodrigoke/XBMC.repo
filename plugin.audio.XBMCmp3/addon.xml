@@ -2,14 +2,14 @@
 	<addon
         id="plugin.audio.XBMCmp3" 
         name="XBMC MP3 addon" 
-        version="0.1.0" 
+        version="0.1.1" 
         provider-name="Rodrigo">
 		<requires>
-			<import addon="xbmc.python"             	version="1.0.0"/>
+			<import addon="xbmc.python"             	version="2.1.0"/>
 			<import addon="script.module.buggalo"   	version="1.1.5" />
-			<import addon="xbmc.addon"              	version="12.0.0"/>
+			<import addon="xbmc.addon"              	version="12.1.0"/>
 		</requires>
-		<extension point="xbmc.python.pluginsource" library="Default.py">
+		<extension point="xbmc.python.pluginsource" library="default.py">
 			<provides>audio</provides>
 		</extension>
 		<extension point="xbmc.addon.metadata">
@@ -19,7 +19,7 @@
 			<platform>all</platform>
 			<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
 			<language>en</language>
-			<forum>http://www.xbmchub.com/forums/</forum>
+			<forum>http://www.xbmchub.com/forums/rodrigos-xbmc-repo/14496-%5Bbeta-release%5D-xbmc-mp3-addon-search-stream-live-mp3s.html</forum>
 			<website>http://www.xbmchub.com/</website>
 			<email></email>
 			<source>https://github.com/rodrigoke/XBMC.repo/tree/master/plugin.audio.XBMCmp3</source>

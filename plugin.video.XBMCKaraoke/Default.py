@@ -138,7 +138,8 @@ def download_karaoke_file(url, dest, displayname=False):
         if sys.exc_info()[0] in (urllib.ContentTooShortError, StopDownloading, OSError):
             return False
         else:
-            buggalo.onExceptionRaised(url + " - " + dest)
+            buggalo.onExceptionRaised()
+            #buggalo.onExceptionRaised(url + " - " + dest)
     return True
 
 def getUnzipped(theurl, thedir, thename, generalid):
@@ -161,13 +162,14 @@ def getUnzipped(theurl, thedir, thename, generalid):
         if not os.path.exists(thedir):
             os.makedirs(thedir)
     except Exception:
-        buggalo.onExceptionRaised(thedir)
+        buggalo.onExceptionRaised()
+        #buggalo.onExceptionRaised(thedir)
         print 'can\'t create directory (' + thedir + ')'
         return
     #try:
     if urlresolver.HostedMediaFile(theurl).valid_url():
         url = urlresolver.resolve(theurl)
-        
+        print 'translated link: ' + url
         if download_karaoke_file(url, name, name):
             # Code to circumvent a bug in URIUtils::HasExtension
             thenewname = theoldname.replace(",", "")

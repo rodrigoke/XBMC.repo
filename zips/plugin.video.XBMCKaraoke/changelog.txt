@@ -1,8 +1,20 @@
-v0.0.1
-- Alpha release
+v1.0.3
+- Changed dependencies for Gotham
+
+v1.0.2
+- Fixed JSON import bug on certain machines (Raspberry PI, ouya...)
+
+v1.0.1
+- Minor adjustments
+
+v1.0.0
+- Public release: happy happy joy joy :-)
 
 v0.1.0
 - Beta release
 
-v1.0.0
-- Public release: happy happy joy joy :-)
+v0.0.1
+- Alpha release
+
+
+

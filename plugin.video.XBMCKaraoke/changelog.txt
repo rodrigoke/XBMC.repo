@@ -1,3 +1,6 @@
+v1.0.3
+- Changed dependencies for Gotham
+
 v1.0.2
 - Fixed JSON import bug on certain machines (Raspberry PI, ouya...)
 
