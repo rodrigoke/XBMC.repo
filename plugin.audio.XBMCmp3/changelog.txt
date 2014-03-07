@@ -1,3 +1,6 @@
+v0.1.2
+- Changed search query to reflect the change made in google search
+
 v0.1.1
 - Changed dependencies for Gotham
 

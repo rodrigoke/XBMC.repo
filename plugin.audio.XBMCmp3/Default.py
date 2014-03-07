@@ -91,7 +91,8 @@ def getLinksFromGoogle(url):
         #text_file.write("Purchase Amount: {0}".format(TotalAmount))
         text_file.write(GetPage(url))
     """
-    alllinks = re.compile('<a href="\/url\?url=(.+?)\&amp;rct=.+?">').findall(link)
+    alllinks = re.compile('<a href="\/url\?q=(.+?)\&amp\;sa=.+?">').findall(link)
+    
     for i in range(len(alllinks)):
         if checkIfNotInForbidden(alllinks[i]) == 1:
             googleURL = urllib.unquote(alllinks[i]).decode('utf8') 
