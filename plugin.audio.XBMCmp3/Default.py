@@ -19,7 +19,11 @@
 import os, re, urllib, urllib2                                                  # Import python function
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin                                     # Import XBMC plugins
 import buggalo                                                                  # Import 3rd party addons
-from t0mm0.common.addon import Addon
+try:
+        from addon.common.addon import Addon
+
+except:
+        from t0mm0.common.addon import Addon
 
 
 #### Constants & initialization

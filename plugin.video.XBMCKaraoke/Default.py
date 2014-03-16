@@ -20,7 +20,12 @@
 import os, re, shutil, urllib, urllib2, pickle, time, glob                      # Import python function
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin                                     # Import XBMC plugins
 import buggalo, urlresolver                                                     # Import 3rd party addons
-from t0mm0.common.addon import Addon
+try:
+        from addon.common.addon import Addon
+
+except:
+        from t0mm0.common.addon import Addon
+
 #http://t0mm0.github.io/xbmc-urlresolver/modules/t0mm0.common/addon.html
 #from common import functions
 

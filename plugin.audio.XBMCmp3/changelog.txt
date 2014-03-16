@@ -1,3 +1,6 @@
+v0.1.3
+- Added addon module
+
 v0.1.2
 - Changed search query to reflect the change made in google search
 
