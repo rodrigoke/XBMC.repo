@@ -3,7 +3,7 @@
 	<addon
         id="plugin.audio.XBMCmp3"
         name="XBMC MP3 addon"
-        version="0.1.3"
+        version="0.1.4"
         provider-name="Rodrigo">
 		<requires>
 			<import addon="xbmc.python"             	version="2.1.0"/>
@@ -24,14 +24,14 @@
 			<forum>http://www.xbmchub.com/forums/rodrigos-xbmc-repo/14496-%5Bbeta-release%5D-xbmc-mp3-addon-search-stream-live-mp3s.html</forum>
 			<website>http://www.xbmchub.com/</website>
 			<email></email>
-			<source>https://github.com/rodrigoke/XBMC.repo/tree/master/plugin.audio.XBMCmp3</source>
+			<source>https://raw.github.com/rodrigoke/XBMC.repo/master/plugin.audio.XBMCmp3</source>
 		</extension>
 	</addon>
 
 	<addon
         id="plugin.video.XBMCKaraoke"
         name="XBMC Karaoke addon"
-        version="1.0.4"
+        version="1.0.5"
         provider-name="Rodrigo">
 		<requires>
 			<import addon="xbmc.python"             	version="2.1.0"/>
@@ -54,19 +54,19 @@
 			<forum>http://www.xbmchub.com/forums/rodrigos-xbmc-repo/14164-%5Brelease%5D-xbmc-karaoke-addon-rodrigo.html</forum>
 			<website>http://www.xbmchub.com/</website>
 			<email></email>
-			<source>https://github.com/rodrigoke/XBMC.repo/tree/master/plugin.video.XBMCKaraoke/</source>
+			<source>https://raw.github.com/rodrigoke/XBMC.repo/master/plugin.video.XBMCKaraoke/</source>
 		</extension>
 	</addon>
 
 	<addon
         id="repository.Rodrigo"
         name="Rodrigo's Repository"
-        version="1.0.2"
+        version="1.0.3"
         provider-name="Rodrigo">
 		<extension point="xbmc.addon.repository" name="Rodrigo's addon repository">
-			<info compressed="false">https://github.com/Rodrigoke/XBMC.repo/raw/master/addons.xml</info>
-			<checksum>https://github.com/Rodrigoke/XBMC.repo/raw/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://github.com/Rodrigoke/XBMC.repo/raw/master/zips</datadir>
+			<info compressed="false">https://raw.github.com/rodrigoke/XBMC.repo/master/addons.xml</info>
+			<checksum>https://raw.github.com/rodrigoke/XBMC.repo/master/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.github.com/Rodrigoke/XBMC.repo/master/zips</datadir>
 		</extension>
 		<extension point="xbmc.addon.metadata">
 			<summary lang="en">Rodrigo's Addon Repository</summary>
@@ -78,7 +78,7 @@
             <forum>http://www.xbmchub.com/forums/</forum>
             <website>http://www.xbmchub.com/</website>
             <email></email>
-            <source>https://github.com/rodrigoke/XBMC.repo/tree/master/repository.Rodrigo</source>
+            <source>https://raw.github.com/Rodrigoke/XBMC.repo/master/repository.Rodrigo</source>
 		</extension>
 	</addon>
 </addons>

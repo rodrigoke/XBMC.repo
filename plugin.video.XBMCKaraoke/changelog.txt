@@ -1,6 +1,8 @@
+v1.0.5
+- Changed addon path to reflect github's changes
+
 v1.0.4
 - Added addon module
-
 
 v1.0.3
 - Changed dependencies for Gotham
