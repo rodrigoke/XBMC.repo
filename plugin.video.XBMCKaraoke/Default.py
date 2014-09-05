@@ -206,13 +206,16 @@ def checkKaraokeSetting():
 def deleteDir(dirname):
     """Deletes the directory (dirname) and everything in it"""
     try:
-        if os.path.exists(dirname):
-            print 'voordelete'
-            shutil.rmtree(dirname)
-            print 'nadelete'
+        dirname2 = os.path.dirname(dirname)
+        for file in os.listdir(dirname2):
+            print file
+            if file.startswith(TEMP_DL_DIR):
+                dirname3 = os.path.join(dirname2, file)
+                print dirname3
+                shutil.rmtree(dirname3)
     except:
         #buggalo.onExceptionRaised(dirname)
-        print "can't delete directory (" + dirname + ")"
+        print "can't delete directory (" + dirname3 + ")"
   
 def loadJsonFromUrl(url):
     data = None
@@ -271,10 +274,14 @@ def KARAOKELINKS(url, id, tempkey):
         print filename
         print urlname
         
-        fullDir = os.path.join(PATH, TEMP_DL_DIR)
+        timestr = time.strftime("%Y%m%d%H%M%S")
+        fullDir = os.path.join(PATH, TEMP_DL_DIR + timestr)
         
         #delete directory
         deleteDir(fullDir)
+        
+        print 'den dir'
+        print fullDir
      
         #download new file
         getUnzipped(urlname, fullDir, filename, id)
