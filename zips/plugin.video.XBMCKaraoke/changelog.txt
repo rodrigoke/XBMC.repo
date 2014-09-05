@@ -1,3 +1,12 @@
+v1.0.6
+- Changed the temp dir to solve the problem with certain android based systems. (they keep a lock on the dir so we can't delete it)
+
+v1.0.5
+- Changed addon path to reflect github's changes
+
+v1.0.4
+- Added addon module
+
 v1.0.3
 - Changed dependencies for Gotham
 
