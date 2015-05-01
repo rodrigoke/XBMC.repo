@@ -58,27 +58,32 @@
 		</extension>
 	</addon>
 
-	<addon
-        id="repository.Rodrigo"
-        name="Rodrigo's Repository"
-        version="1.0.3"
-        provider-name="Rodrigo">
-		<extension point="xbmc.addon.repository" name="Rodrigo's addon repository">
-			<info compressed="false">https://raw.github.com/rodrigoke/XBMC.repo/master/addons.xml</info>
-			<checksum>https://raw.github.com/rodrigoke/XBMC.repo/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/Rodrigoke/XBMC.repo/master/zips</datadir>
-		</extension>
-		<extension point="xbmc.addon.metadata">
-			<summary lang="en">Rodrigo's Addon Repository</summary>
-			<description lang="en">Addons developed by Rodrigo.[CR]For support, please visit the XBMCHUB forums.[CR][CR]Powered by [COLOR blue][B]XBMCHUB[/B].com[/COLOR]</description>
-            <disclaimer lang="en">For bugs, requests or general questions contact Rodrigo on the XBMCHUB forum.</disclaimer>
-            <platform>all</platform>
-			<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-            <language>en</language>
-            <forum>http://www.xbmchub.com/forums/</forum>
-            <website>http://www.xbmchub.com/</website>
-            <email></email>
-            <source>https://raw.github.com/Rodrigoke/XBMC.repo/master/repository.Rodrigo</source>
-		</extension>
-	</addon>
+<addon
+    id="repository.Rodrigo"
+    name="Rodrigo's Repository"
+    version="1.0.4"
+    provider-name="Rodrigo">
+    <extension point="xbmc.addon.repository" name="Rodrigo's addon repository">
+        <dir>
+            <info compressed="false">https://raw.github.com/rodrigoke/XBMC.repo/master/addons.xml</info>
+            <checksum>https://raw.github.com/rodrigoke/XBMC.repo/master/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.github.com/Rodrigoke/XBMC.repo/master/zips</datadir>
+        </dir>
+        <info compressed="false">https://offshoregit.com/Rodrigo/XBMC.repo/addons.xml</info>
+        <checksum>https://offshoregit.com/Rodrigo/XBMC.repo/addons.xml.md5</checksum>
+        <datadir zip="true">https://offshoregit.com/Rodrigo/XBMC.repo/zips</datadir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en">Rodrigo's Addon Repository</summary>
+        <description lang="en">Addons developed by Rodrigo.[CR]For support, please visit the XBMCHUB forums.[CR][CR]Powered by [COLOR blue][B]XBMCHUB[/B].com[/COLOR]</description>
+        <disclaimer lang="en">For bugs, requests or general questions contact Rodrigo on the XBMCHUB forum.</disclaimer>
+        <platform>all</platform>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+        <language>en</language>
+        <forum>http://www.xbmchub.com/forums/</forum>
+        <website>http://www.xbmchub.com/</website>
+        <email></email>
+        <source>https://raw.github.com/Rodrigoke/XBMC.repo/master/repository.Rodrigo</source>
+    </extension>
+</addon>
 </addons>
