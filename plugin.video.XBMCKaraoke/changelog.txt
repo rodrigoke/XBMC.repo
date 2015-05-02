@@ -1,3 +1,13 @@
+v2.0.0
+- New Functionality!!
+  From now on you can use your mobile phone to queue new songs!!
+  Just install a QR code scanner on your mobile phone like "QR barcode scanner", "QR Reader", "NeoReader"... and scan the QR code
+- Added "Latest Songs" option so people can browse the latest songs.
+- Launched mobile site
+
+v1.0.7
+- BETA!!!!
+
 v1.0.6
 - Changed the temp dir to solve the problem with certain android based systems. (they keep a lock on the dir so we can't delete it)
 

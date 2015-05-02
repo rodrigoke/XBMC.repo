@@ -22,7 +22,6 @@ import xbmc, xbmcaddon, xbmcgui, xbmcplugin                                     
 import buggalo, urlresolver                                                     # Import 3rd party addons
 try:
         from addon.common.addon import Addon
-
 except:
         from t0mm0.common.addon import Addon
 
@@ -47,7 +46,7 @@ if not 'load' in dir(_json):
 
 
 #### Constants & initialization
-buggalo.SUBMIT_URL = 'http://buggalo.xbmchub.com/submit.php'                    # Official XBMC error report generator
+buggalo.SUBMIT_URL = 'http://buggalo.tvaddons.ag/submit.php'                    # Official XBMC error report generator
 ADDON_NAME = 'plugin.video.XBMCKaraoke'                                         # Addon namespace
 __addon__ = xbmcaddon.Addon(ADDON_NAME)                                         # Initializing addon properties
 __t0mm0addon__ = Addon(ADDON_NAME, sys.argv)                                    # Initializing addon properties
@@ -59,6 +58,7 @@ PATH = xbmc.translatePath(__addon__.getAddonInfo('path')).decode('utf-8')       
 TEMP_DL_DIR =  'tempdl'                                                         # Temp download directory. No write permissions in special://temp so using folder inside the addon
 jsonurl = 'http://api.xbmckaraoke.com/'                                         # PHP JSON website (database)
 url = None                                                                      # Standard value
+donotloaddir = 0                                                                # Standard value
 
 THEME = __t0mm0addon__.get_setting('theme')                                     # Theme settings
 THEME_PATH = os.path.join(PATH, 'art', 'themes', THEME)                         # Theme dir
@@ -92,7 +92,48 @@ class StopDownloading(Exception):
 
     def __str__(self):
         return repr(self.value)
+
+class QRWindow(xbmcgui.Window):
+
+    
+    def __init__(self):
+    
+        self.qrimg = ''
+        
+        # self.strActionInfo = xbmcgui.ControlLabel(300, 200, 600, 200, '', 'font14', '0xFFBBBBFF')
+        # self.addControl(self.strActionInfo)
+        # self.strActionInfo.setLabel(__language__(70105))
+        
+        # qrimg = 'http://api.xbmckaraoke.com/temp/qrcode.php.png'
+        # self.imgControl = xbmcgui.ControlImage(450,250,159,159, "")
+        # self.imgControl.setImage("")
+        # self.imgControl.setImage(qrimg)
+        # self.addControl(self.imgControl)
+        # self.button = xbmcgui.ControlButton(480, 420, 100, 35, 'OK', font='font14', alignment=2)
+        # self.addControl(self.button)
+        # self.setFocus(self.button)
+    
+    def show(self):
+        self.strActionInfo = xbmcgui.ControlLabel(300, 200, 600, 200, '', 'font14', '0xFFBBBBFF')
+        self.addControl(self.strActionInfo)
+        self.strActionInfo.setLabel(__language__(70105))
+        
+        # qrimg = 'http://api.xbmckaraoke.com/temp/qrcode.php.png'
+        self.imgControl = xbmcgui.ControlImage(450,250,159,159, "")
+        self.imgControl.setImage("")
+        self.imgControl.setImage(self.qrimg)
+        self.addControl(self.imgControl)
+        self.button = xbmcgui.ControlButton(480, 420, 100, 35, 'OK', font='font14', alignment=2)
+        self.addControl(self.button)
+        # self.setFocus(self.button)
+
+    def onControl(self, event):
+        if event == self.button: 
+            self.close()
             
+    def QRlink(self, text):
+        self.qrimg = text
+        
 def art(name):
     if '#' in name: name=name.replace('#','0');
     art_img = os.path.join(THEME_PATH, name + ".jpg")
@@ -172,35 +213,48 @@ def getUnzipped(theurl, thedir, thename, generalid):
         print 'can\'t create directory (' + thedir + ')'
         return
     #try:
-    if urlresolver.HostedMediaFile(theurl).valid_url():
-        url = urlresolver.resolve(theurl)
-        print 'translated link: ' + url
-        if download_karaoke_file(url, name, name):
-            # Code to circumvent a bug in URIUtils::HasExtension
-            thenewname = theoldname.replace(",", "")
-            if thenewname != theoldname:
-                newname = os.path.join(thedir, thenewname)
-                os.rename(name, newname)
-                name = newname
+    print theurl[0:25]
+    if urlresolver.HostedMediaFile(theurl).valid_url() or theurl[0:25] == "http://www.mediafire.com/":
+    
+        try:
+            if theurl[0:25] == "http://www.mediafire.com/":
+                url = theurl
+            else:
+                url = urlresolver.resolve(theurl)
+            print 'translated link: ' + url
+            if download_karaoke_file(url, name, name):
+                # Code to circumvent a bug in URIUtils::HasExtension
+                thenewname = theoldname.replace(",", "")
+                if thenewname != theoldname:
+                    newname = os.path.join(thedir, thenewname)
+                    os.rename(name, newname)
+                    name = newname
 
-            # Python unzip is rubbish!!! gave me corrupted unzips every time
-            xbmc.executebuiltin('xbmc.extract(' + name + ')', True)
+                # Python unzip is rubbish!!! gave me corrupted unzips every time
+                xbmc.executebuiltin('xbmc.extract(' + name + ')', True)
 
-            # Remove the zip file
-            os.unlink(name)
-        else:
-            reportFile('brokenlink', generalid, thename, theurl);
-            xbmcgui.Dialog().ok(__addonname__, __language__(70120), __language__(70121), '')
+                # Remove the zip file
+                os.unlink(name)
+                return 1
+            else:
+                reportFile('brokenlink', generalid, thename, theurl);
+                xbmcgui.Dialog().ok(__addonname__, __language__(70120), __language__(70121), '')
+                return 0
+        except:
+            xbmcgui.Dialog().ok(__addonname__, __language__(70126), __language__(70127), __language__(70121))
+            return 0
     else:
         reportFile('brokenlink', generalid, thename, theurl);
         xbmcgui.Dialog().ok(__addonname__, __language__(70122), __language__(70121), '')
+        return 0
+    return 0
 
 def checkKaraokeSetting():
     """Verifies if the Karaoke setting is enabled in XBMC
     If not, an OK dialog is shown and the script is terminated"""
     if xbmc.getCondVisibility('system.getbool(karaoke.enabled)') != 1:
 
-        xbmcgui.Dialog().ok(__addonname__, __language__(70114), __language__(70115), __language__(70115))
+        xbmcgui.Dialog().ok(__addonname__, __language__(70114), ' ', __language__(70115))
         raise SystemExit
     
 def deleteDir(dirname):
@@ -257,7 +311,11 @@ def getJSONData(serviceUrl, data):
             break  # success; no further attempts
         except Exception:
             pass # probably timeout; retry
-
+    
+def TEST(url, mode):
+    window = QRWindow()
+    window.doModal() 
+    
 def KARAOKELINKS(url, id, tempkey):
 
     url = url + '?generalid='+ str(id)
@@ -274,62 +332,55 @@ def KARAOKELINKS(url, id, tempkey):
         print filename
         print urlname
         
+        if filename == None and urlname == None:
+            xbmcgui.Dialog().ok(__addonname__, ' ', __language__(70117))
+            donotloaddir = 1
+            return
+        
         timestr = time.strftime("%Y%m%d%H%M%S")
         fullDir = os.path.join(PATH, TEMP_DL_DIR + timestr)
         
         #delete directory
         deleteDir(fullDir)
         
-        print 'den dir'
+        print 'Directory'
         print fullDir
      
         #download new file
-        getUnzipped(urlname, fullDir, filename, id)
+        
 
         #fullFilePath = os.path.splitext(os.path.join(fullDir, filename))[0]
         #fullFilePath = fullFilePath + '.mp3'
 
-        
-        os.chdir(fullDir)
-        i = 1
-        for files in glob.glob("*.mp3"):
-            if i == 1:
-                i = 2
-                xbmc.Player().play(os.path.join(fullDir, files))
+        if getUnzipped(urlname, fullDir, filename, id) == 1:
+            os.chdir(fullDir)
+            i = 1
+            for files in glob.glob("*.mp3"):
+                if i == 1:
+                    i = 2
+                    xbmc.Player().play(os.path.join(fullDir, files))
 
-        if len(glob.glob("*.mp3")) < 1:
-            reportFile('badzip', id, filename, urlname);
-            xbmcgui.Dialog().ok(__addonname__, __language__(70123), __language__(70124),  __language__(70125))
-                
-        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        #while xbmc.Player().isPlaying():
-        #    print 'sleeping...'
-        #    xbmc.sleep(1000)
-        
-        
-        #def addDir(name,url,mode,iconimage,page, id, param1, param2="", isfolder=True):
-        
-        liz=xbmcgui.ListItem('', '', iconImage='DefaultAlbumCover.png', thumbnailImage='')
-        #liz.setInfo( type='music', infoLabels={ 'Title': name, 'count': id} )
-        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url='',listitem=liz,isFolder=False)
+            if len(glob.glob("*.mp3")) < 1:
+                reportFile('badzip', id, filename, urlname);
+                xbmcgui.Dialog().ok(__addonname__, __language__(70123), __language__(70124),  __language__(70125))
+                    
+            #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+            #while xbmc.Player().isPlaying():
+            #    print 'sleeping...'
+            #    xbmc.sleep(1000)
+            
+            
+            #def addDir(name,url,mode,iconimage,page, id, param1, param2="", isfolder=True):
+            
+            liz=xbmcgui.ListItem('', '', iconImage='DefaultAlbumCover.png', thumbnailImage='')
+            #liz.setInfo( type='music', infoLabels={ 'Title': name, 'count': id} )
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url='',listitem=liz,isFolder=0)
 
 
     except Exception as e:
         buggalo.onExceptionRaised()
         print (e)
 
-def HOME():
-    addDir(__language__(70000), 'search.php', 'searchArtists',  art('searchArtistName'), '0',0, '')
-    addDir(__language__(70001), 'search.php', 'searchSongs',    art('SearchSongName'), '0',0, '')
-    addDir(__language__(70002), 'search.php', 'searchIDs',      art('SearchListID'), '0',0, '')
-    addDir(__language__(70003), 'search.php', 'browseArtistsListSub',  art('BrowseAllArtists'), '0',0, '')
-    addDir(__language__(70004), 'search.php', 'browseSongsListSub',    art('BrowseAllSongs'), '0',0, '')
-    addDir(__language__(70005), 'search.php', 'getPopular',     art('FeaturedMostPopular'), '0',0, '')
-    addDir(__language__(70006), 'search.php', 'getLucky',       art('FeaturedFeelingLucky'), '0',0, '')
-    #addDir('test', 'search.php', 'browseSongsListSub',       art('FeaturedFeelingLucky'), '0',0, '')
-
-    
-    
 def getAllTheLetters(begin='A', end='Z'):
     beginNum = ord(begin)
     endNum = ord(end)
@@ -477,6 +528,24 @@ def BROWSESONGSFROMARTIST(url, mode, pageid, id):
     else:
         xbmcgui.Dialog().ok(__addonname__, __language__(70101), __language__(70102), __language__(70103))
 
+def BROWSELATEST(url, mode, pageid):
+
+    url = url + '?type='+mode.lower()
+    url = url + '&pageid='+ str(pageid)
+    print jsonurl + url
+
+    pageid = int(pageid) + 1
+    _json = loadJsonFromUrl(jsonurl + url)
+    if (_json):
+        count = 0
+        for items in _json:
+            count = count + 1
+            addDir(items['song_name'], 'getlink.php', 'getVideo',         '', '1',items['general_id'], items['temp_key'])
+        if count == 30:
+            addDir(__language__(70100), 'search.php', 'getLatest',         '', str(pageid),id, '')
+    else:
+        xbmcgui.Dialog().ok(__addonname__, __language__(70101), __language__(70102), __language__(70103))
+        
 def BROWSEARTISTS(url, mode, pageid, letter):
 
     url = url + '?type='+mode.lower()
@@ -496,13 +565,29 @@ def BROWSEARTISTS(url, mode, pageid, letter):
                 addDir(__language__(70100), 'search.php', 'browseArtists',         '', str(pageid),'', str(letter))
     else:
         xbmcgui.Dialog().ok(__addonname__, __language__(70101), __language__(70102), __language__(70103))
+
+def GETQRCODE(url, mode):
+
+    url = url + '?type='+mode.lower()
+    print jsonurl + url
+    _json = loadJsonFromUrl(jsonurl + url)
+    if (_json):
+        __addon__.setSetting('session_key', _json[0]['unique_id'])
+        # __addon__.setSetting('session_date', time.strftime("%Y%m%d%H%M%S"))
+        __addon__.setSetting('session_date', str(time.time()+1800))
+        window = QRWindow()
+        window.QRlink(_json[0]['QR_link'])
+        window.show()
+        window.doModal() 
+        print 'session key: ' + __addon__.getSetting('session_key')
+        print 'session unix timestamp: ' + __addon__.getSetting('session_date')
+    else:
+        xbmcgui.Dialog().ok(__addonname__, __language__(70101), __language__(70102), __language__(70103))
         
 def get_params_v2():
 
     paramstring = sys.argv[2]
-    
     print paramstring;
-    
     if paramstring != '?content_type=video':
         params = pickle.loads(paramstring);
         param = {'url': params[0], 'mode': params[1], 'page': params[2], 'id': params[3], 'param1': params[4], 'param2': params[5] }
@@ -573,6 +658,20 @@ def addDir2(name,url,mode,iconimage,page, id, param1, param2=""):
     
     ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=content,listitem=liz,isFolder=True)
     return ok
+
+def HOME():
+    #      name,                url,          mode,                     iconimage,               page, id, param1, param2=""):
+    addDir(__language__(70000), 'search.php', 'searchArtists',          art('searchArtistName'), '0',0, '')
+    addDir(__language__(70001), 'search.php', 'searchSongs',            art('SearchSongName'), '0',0, '')
+    addDir(__language__(70002), 'search.php', 'searchIDs',              art('SearchListID'), '0',0, '')
+    addDir(__language__(70003), 'search.php', 'browseArtistsListSub',   art('BrowseAllArtists'), '0',0, '')
+    addDir(__language__(70004), 'search.php', 'browseSongsListSub',     art('BrowseAllSongs'), '0',0, '')
+    addDir(__language__(70011), 'search.php', 'getLatest',              art('FeaturedLatestSongs'), '0',0, '')
+    addDir(__language__(70005), 'search.php', 'getPopular',             art('FeaturedMostPopular'), '0',0, '')
+    # addDir(__language__(70010), 'search.php', 'getPopularLast7',        art('FeaturedMostPopular'), '0',0, '')
+    addDir(__language__(70006), 'search.php', 'getLucky',               art('FeaturedFeelingLucky'), '0',0, '')
+    addDir(__language__(70008), 'search.php', 'getQRCode',       	    art('MobileScanQR'), '0',0, '', '' , 0)
+    addDir(__language__(70009), 'getnext.php', 'getQueue',       	    art('MobilePlayQueue'), '1',__addon__.getSetting('session_key'), '', '' , 0)
 
 def MODESWITCHER():
 
@@ -661,6 +760,14 @@ def MODESWITCHER():
             buggalo.trackUserFlow(str(mode) + ' - ' + str(id))
             KARAOKELINKS(url,id,param1)
             break
+        if case('getLatest'):
+            buggalo.trackUserFlow(str(mode) + ' - ' + str(page))
+            BROWSELATEST(url,mode,page)
+            break
+        if case('getPopularLast7'):
+            buggalo.trackUserFlow(str(mode))
+            GETPOPULAR(url,mode)
+            break
         if case('getPopular'):
             buggalo.trackUserFlow(str(mode))
             GETPOPULAR(url,mode)
@@ -677,6 +784,18 @@ def MODESWITCHER():
             buggalo.trackUserFlow(str(mode))
             BROWSESONGSLISTSUB()
             break
+        if case('getQRCode'):
+            buggalo.trackUserFlow(str(mode))
+            GETQRCODE(url,mode)
+            break
+        if case('getQueue'):
+            buggalo.trackUserFlow(str(mode))
+            KARAOKELINKS(url,id,param1)
+            break
+        if case('test'):
+            buggalo.trackUserFlow(str(mode))
+            TEST(url,mode)
+            break
         if case():
             buggalo.trackUserFlow('Default mode')
             checkKaraokeSetting()
@@ -686,8 +805,26 @@ def MODESWITCHER():
 
 # When entering menu, automatically stop playing (workaround XBMC crashing)
 xbmc.Player().stop()
-
 MODESWITCHER()
 
+"""
+frina =  xbmc.getInfoLabel('System.FriendlyName')
+videncinf =  xbmc.getInfoLabel('System.VideoEncoderInfo')
+buildver = xbmc.getInfoLabel('System.buildversion')
+osver =  xbmc.getInfoLabel('System.osversioninfo')
+macaddr = xbmc.getInfoLabel('Network.MacAddress')
+ipaddr = xbmc.getInfoLabel('Network.IPAddress')
+print frina
+print videncinf
+print buildver
+print osver
+print macaddr
+print ipaddr
+print xbmc.getInfoLabel('System.KernelVersion')
+"""
 
-xbmcplugin.endOfDirectory(int(sys.argv[1]))
+if int(sys.argv[1]) != -1:
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+
+
