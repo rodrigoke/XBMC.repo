@@ -318,7 +318,10 @@ def TEST(url, mode):
     
 def KARAOKELINKS(url, id, tempkey):
 
-    url = url + '?generalid='+ str(id)
+    if tempkey == 'session':
+        url = url + '?generalid='+ __addon__.getSetting('session_key')
+    else:
+        url = url + '?generalid='+ str(id)
     url = url + '&tempkey='+ str(tempkey)
     print jsonurl + url
 
@@ -671,7 +674,8 @@ def HOME():
     # addDir(__language__(70010), 'search.php', 'getPopularLast7',        art('FeaturedMostPopular'), '0',0, '')
     addDir(__language__(70006), 'search.php', 'getLucky',               art('FeaturedFeelingLucky'), '0',0, '')
     addDir(__language__(70008), 'search.php', 'getQRCode',       	    art('MobileScanQR'), '0',0, '', '' , 0)
-    addDir(__language__(70009), 'getnext.php', 'getQueue',       	    art('MobilePlayQueue'), '1',__addon__.getSetting('session_key'), '', '' , 0)
+    addDir(__language__(70009), 'getnext.php', 'getQueue',       	    art('MobilePlayQueue'), '1','0', 'session', '' , 0)
+
 
 def MODESWITCHER():
 

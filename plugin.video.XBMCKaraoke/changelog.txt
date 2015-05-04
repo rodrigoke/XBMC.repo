@@ -1,3 +1,7 @@
+v2.0.1
+- Made sure the latest QR code was used to grab the mobile queue
+- Added the graphic for the "latest songs", this wasn't included in the 2.0.0 zip file
+
 v2.0.0
 - New Functionality!!
   From now on you can use your mobile phone to queue new songs!!
