@@ -1,3 +1,6 @@
+v2.0.2
+- Added a welcome message popup, in sight of the new kodi version that is not compatible
+
 v2.0.1
 - Made sure the latest QR code was used to grab the mobile queue
 - Added the graphic for the "latest songs", this wasn't included in the 2.0.0 zip file

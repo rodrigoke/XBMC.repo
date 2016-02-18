@@ -22,13 +22,6 @@ class Generator:
     """
     zippath = 'zips'
 
-
-
-
-
-
-
-
     """
         Generates a new addons.xml file from each addons addon.xml file
         and a new addons.xml.md5 hash file. Must be run from the root of
@@ -43,7 +36,7 @@ class Generator:
         self._generate_md5_file()
         self._generate_zip_files()
         # notify user
-        print "Finished updating addons xml, md5 files and zipping addons"
+        # print "Finished updating addons xml, md5 files and zipping addons"
 
     def _generate_zip_files ( self ):
         addons = os.listdir( "." )
@@ -60,8 +53,8 @@ class Generator:
                     version = parent.getAttribute("version")
                     addonid = parent.getAttribute("id")
                 self._generate_zip_file(addon, version, addonid)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print (e)
 
     def _generate_zip_file ( self, path, version, addonid):
         filename = path + "-" + version + ".zip"
@@ -75,8 +68,8 @@ class Generator:
                 os.unlink(zippath + "\\" + addonid + "\\" + filename)
 #                os.rename(zippath + "\\" + addonid + "\\" + filename, zippath + "\\" + addonid + "\\" + filename + "." + datetime.datetime.now().strftime("%Y%m%d%H%M%S") )
             shutil.move(filename, zippath + "\\" + addonid + "\\")
-        except Exception, e:
-            print e
+        except Exception as e:
+             print (e)
 
     def _generate_addons_file( self ):
         # addon list
@@ -87,7 +80,7 @@ class Generator:
         for addon in addons:
             try:
                 # skip any file or .git folder
-                if ( not os.path.isdir( addon ) or addon == ".git" ): continue
+                if ( not os.path.isdir( addon ) or addon == ".git" or addon == zippath): continue
                 # create path
                 _path = os.path.join( addon, "addon.xml" )
                 # split lines for stripping
@@ -99,44 +92,39 @@ class Generator:
                     # skip encoding format line
                     if ( line.find( "<?xml" ) >= 0 ): continue
                     # add line
-                    addon_xml += unicode( line.rstrip() + "\n", "utf-8" )
+                    addon_xml += str( line.rstrip() + "\n")
                 # we succeeded so add to our final addons.xml text
                 addons_xml += addon_xml.rstrip() + "\n\n"
-            except Exception, e:
+            except Exception as e:
                 # missing or poorly formatted addon.xml
-                print "Excluding %s for %s" % ( _path, e, )
+                print (e)
+                print ("Excluding %s for %s" % ( _path, e, ))
         # clean and add closing tag
         addons_xml = addons_xml.strip() + u"\n</addons>\n"
         # save file
-        self._save_file( addons_xml.encode( "utf-8" ), file="addons.xml" )
+        self._save_file( addons_xml, file="addons.xml" )
 
     def _generate_md5_file( self ):
         try:
-###################### Deprecated md5 lib BEGIN ######################            
+            # print(hashlib.md5('asd'.encode()).hexdigest())
             # create a new md5 hash
-#            m = md5.new( open( "addons.xml" ).read() ).hexdigest()     
+            m=hashlib.md5(open( "addons.xml" ).read().encode())
             # save file
-#            self._save_file( m, file="addons.xml.md5" )
-###################### Deprecated md5 lib END ######################
-
-            # create a new md5 hash
-            m=hashlib.md5(open( "addons.xml" ).read())
-            # save file
-            print m.hexdigest()
+            print (m.hexdigest())
             self._save_file( m.hexdigest(), file="addons.xml.md5" )
             
 
-        except Exception, e:
+        except Exception as e:
             # oops
-            print "An error occurred creating addons.xml.md5 file!\n%s" % ( e, )
+            print ("An error occurred creating addons.xml.md5 file!\n%s" % ( e, ))
 
     def _save_file( self, data, file ):
         try:
             # write data to the file
             open( file, "w" ).write( data )
-        except Exception, e:
+        except Exception as e:
             # oops
-            print "An error occurred saving %s file!\n%s" % ( file, e, )
+            print ("An error occurred saving %s file!\n%s" % ( file, e, ))
 
 
 if ( __name__ == "__main__" ):

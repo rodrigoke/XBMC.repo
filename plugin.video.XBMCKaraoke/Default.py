@@ -1,4 +1,4 @@
-#    Copyright (C) 2013 Rodrigo
+#    Copyright (C) 2016 Rodrigo
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,21 +28,13 @@ except:
 #http://t0mm0.github.io/xbmc-urlresolver/modules/t0mm0.common/addon.html
 #from common import functions
 
-
-
-#### Special Imports
-#if sys.version_info >=  (2, 7):                                                 # If we are using Python 2.7, use the internal JSON plugin
-#    import _json                                                                # Otherwise, use the simplejson external plugin
-#else:
-#    import simplejson as _json 
-
 ## XBMC workaround
 import _json
 if not 'load' in dir(_json):
     import simplejson as _json
     
     
-    
+from library import utils
 
 
 #### Constants & initialization
@@ -65,75 +57,38 @@ THEME_PATH = os.path.join(PATH, 'art', 'themes', THEME)                         
 
 
 
-class switch(object):
 
-    def __init__(self, value):
-        self.value = value
-        self.fall = False
 
-    def __iter__(self):
-        """Return the match method once, then stop"""
-        yield self.match
-        raise StopIteration
-    
-    def match(self, *args):
-        """Indicate whether or not to enter a case suite"""
-        if self.fall or not args:
-            return True
-        elif self.value in args:
-            self.fall = True
-            return True
-        else:
-            return False
-
-class StopDownloading(Exception):
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return repr(self.value)
-
-class QRWindow(xbmcgui.Window):
-
-    
-    def __init__(self):
-    
-        self.qrimg = ''
+def getConfigInfo():
+    try:
+        _json = utils.loadJsonFromUrl(jsonurl + "config.php?version=" + __addon__.getAddonInfo('version'))
+        if _json == None:
+            xbmcgui.Dialog().ok(__addonname__, ' ', __language__(70111))
+            return
+        filename = _json[0]['full_file_name']
+        urlname = _json[0]['url_name']
         
-        # self.strActionInfo = xbmcgui.ControlLabel(300, 200, 600, 200, '', 'font14', '0xFFBBBBFF')
-        # self.addControl(self.strActionInfo)
-        # self.strActionInfo.setLabel(__language__(70105))
+        print filename
+        print urlname
         
-        # qrimg = 'http://api.xbmckaraoke.com/temp/qrcode.php.png'
-        # self.imgControl = xbmcgui.ControlImage(450,250,159,159, "")
-        # self.imgControl.setImage("")
-        # self.imgControl.setImage(qrimg)
-        # self.addControl(self.imgControl)
-        # self.button = xbmcgui.ControlButton(480, 420, 100, 35, 'OK', font='font14', alignment=2)
-        # self.addControl(self.button)
-        # self.setFocus(self.button)
-    
-    def show(self):
-        self.strActionInfo = xbmcgui.ControlLabel(300, 200, 600, 200, '', 'font14', '0xFFBBBBFF')
-        self.addControl(self.strActionInfo)
-        self.strActionInfo.setLabel(__language__(70105))
-        
-        # qrimg = 'http://api.xbmckaraoke.com/temp/qrcode.php.png'
-        self.imgControl = xbmcgui.ControlImage(450,250,159,159, "")
-        self.imgControl.setImage("")
-        self.imgControl.setImage(self.qrimg)
-        self.addControl(self.imgControl)
-        self.button = xbmcgui.ControlButton(480, 420, 100, 35, 'OK', font='font14', alignment=2)
-        self.addControl(self.button)
-        # self.setFocus(self.button)
+        if filename == None and urlname == None:
+            xbmcgui.Dialog().ok(__addonname__, ' ', __language__(70117))
+            donotloaddir = 1
+            return
 
-    def onControl(self, event):
-        if event == self.button: 
-            self.close()
-            
-    def QRlink(self, text):
-        self.qrimg = text
-        
+        line1 = "This is a simple example of OK dialog"
+        line2 = "Showing this message using"
+        line3 = "XBMC python modules"
+
+        xbmcgui.Dialog().ok(__addonname__, line1, line2, line3)
+
+    except Exception as e:
+        buggalo.onExceptionRaised()
+        print (e)
+
+def getStartupDialog():
+	print "blaat"
+
 def art(name):
     if '#' in name: name=name.replace('#','0');
     art_img = os.path.join(THEME_PATH, name + ".jpg")
@@ -161,7 +116,7 @@ def _pbhook(numblocks, blocksize, filesize, dlg, start_time):
         dlg.update(percent)
     if dlg.iscanceled():
         dlg.close()
-        raise StopDownloading('Stopped Downloading')
+        raise utils.StopDownloading('Stopped Downloading')
 
 def download_karaoke_file(url, dest, displayname=False):
     print 'Downloading karaoke file'
@@ -181,7 +136,7 @@ def download_karaoke_file(url, dest, displayname=False):
         #only handle StopDownloading (from cancel),
         #ContentTooShort (from urlretrieve), and OS (from the race condition);
         #let other exceptions bubble 
-        if sys.exc_info()[0] in (urllib.ContentTooShortError, StopDownloading, OSError):
+        if sys.exc_info()[0] in (urllib.ContentTooShortError, utils.StopDownloading, OSError):
             return False
         else:
             buggalo.onExceptionRaised()
@@ -271,18 +226,7 @@ def deleteDir(dirname):
         #buggalo.onExceptionRaised(dirname)
         print "can't delete directory (" + dirname3 + ")"
   
-def loadJsonFromUrl(url):
-    data = None
-    try:
-        req = urllib2.Request(url)
-        req.add_header('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
-        req.add_header('User-Agent','Mozilla/5.0 (X11; Linux x86_64) XBMCKARAOKEADDON/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11')
-        response = urllib2.urlopen(req)
-        data = _json.load(response)
-    except Exception as ex:
-        #print ex
-        pass
-    return data
+
 
 def reportFile(reporttype, generalid, filename, urlname):
     url = 'report.php?type=' + reporttype
@@ -327,7 +271,7 @@ def KARAOKELINKS(url, id, tempkey):
 
     try:
     
-        _json = loadJsonFromUrl(jsonurl + url)
+        _json = utils.loadJsonFromUrl(jsonurl + url)
 
         filename = _json[0]['full_file_name']
         urlname = _json[0]['url_name']
@@ -439,7 +383,7 @@ def SEARCH(url, mode, pageid, searchq = ""):
 
     if str(searchq) != 'None':
         pageid = int(pageid) + 1
-        _json = loadJsonFromUrl(jsonurl + url)
+        _json = utils.loadJsonFromUrl(jsonurl + url)
         if (_json):
             count = 0
             if mode == 'searchArtists':
@@ -473,7 +417,7 @@ def GETLUCKY(url, mode):
     url = url + '?type='+mode.lower()
     print jsonurl + url
 
-    _json = loadJsonFromUrl(jsonurl + url)
+    _json = utils.loadJsonFromUrl(jsonurl + url)
     if (_json):
         addDir(_json[0]['song_name'], 'getlink.php', 'getVideo', '', '1',_json[0]['general_id'], _json[0]['temp_key'])
     else:
@@ -484,7 +428,7 @@ def GETPOPULAR(url, mode):
     url = url + '?type='+mode.lower()
     print jsonurl + url
 
-    _json = loadJsonFromUrl(jsonurl + url)
+    _json = utils.loadJsonFromUrl(jsonurl + url)
     if (_json):
         count = 0
         for items in _json:
@@ -501,7 +445,7 @@ def BROWSESONGS(url, mode, pageid, letter):
     print jsonurl + url
 
     pageid = int(pageid) + 1
-    _json = loadJsonFromUrl(jsonurl + url)
+    _json = utils.loadJsonFromUrl(jsonurl + url)
     if (_json):
         count = 0
         for items in _json:
@@ -520,7 +464,7 @@ def BROWSESONGSFROMARTIST(url, mode, pageid, id):
     print jsonurl + url
 
     pageid = int(pageid) + 1
-    _json = loadJsonFromUrl(jsonurl + url)
+    _json = utils.loadJsonFromUrl(jsonurl + url)
     if (_json):
         count = 0
         for items in _json:
@@ -538,7 +482,7 @@ def BROWSELATEST(url, mode, pageid):
     print jsonurl + url
 
     pageid = int(pageid) + 1
-    _json = loadJsonFromUrl(jsonurl + url)
+    _json = utils.loadJsonFromUrl(jsonurl + url)
     if (_json):
         count = 0
         for items in _json:
@@ -556,7 +500,7 @@ def BROWSEARTISTS(url, mode, pageid, letter):
     url = url + '&extra='+ str(letter)
     print jsonurl + url
     pageid = int(pageid) + 1
-    _json = loadJsonFromUrl(jsonurl + url)
+    _json = utils.loadJsonFromUrl(jsonurl + url)
     if (_json):
         count = 0
         for items in _json:
@@ -573,12 +517,12 @@ def GETQRCODE(url, mode):
 
     url = url + '?type='+mode.lower()
     print jsonurl + url
-    _json = loadJsonFromUrl(jsonurl + url)
+    _json = utils.loadJsonFromUrl(jsonurl + url)
     if (_json):
         __addon__.setSetting('session_key', _json[0]['unique_id'])
         # __addon__.setSetting('session_date', time.strftime("%Y%m%d%H%M%S"))
         __addon__.setSetting('session_date', str(time.time()+1800))
-        window = QRWindow()
+        window = utils.QRWindow()
         window.QRlink(_json[0]['QR_link'])
         window.show()
         window.doModal() 
@@ -663,6 +607,12 @@ def addDir2(name,url,mode,iconimage,page, id, param1, param2=""):
     return ok
 
 def HOME():
+    currtime = int(time.time())
+    if __addon__.getSetting('last_run_date') != '':
+        if int(__addon__.getSetting('last_run_date')) <= currtime-14400: #14400
+            utils.TextBox()
+    __addon__.setSetting('last_run_date', str(currtime))
+    checkKaraokeSetting()
     #      name,                url,          mode,                     iconimage,               page, id, param1, param2=""):
     addDir(__language__(70000), 'search.php', 'searchArtists',          art('searchArtistName'), '0',0, '')
     addDir(__language__(70001), 'search.php', 'searchSongs',            art('SearchSongName'), '0',0, '')
@@ -728,12 +678,10 @@ def MODESWITCHER():
     print "param2: "+str(param2)
 
 
-    for case in switch(mode):
+    for case in utils.switch(mode):
         if case('A'): pass
         if case(None):
             buggalo.trackUserFlow('None mode selected')
-            print ""
-            checkKaraokeSetting()
             HOME()
             break
         if case('searchArtists'):
@@ -829,6 +777,3 @@ print xbmc.getInfoLabel('System.KernelVersion')
 
 if int(sys.argv[1]) != -1:
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
-
-
-
