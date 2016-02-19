@@ -608,10 +608,12 @@ def addDir2(name,url,mode,iconimage,page, id, param1, param2=""):
 
 def HOME():
     currtime = int(time.time())
-    if __addon__.getSetting('last_run_date') != '':
-        if int(__addon__.getSetting('last_run_date')) <= currtime-14400: #14400
-            utils.TextBox()
-    __addon__.setSetting('last_run_date', str(currtime))
+    print "Last run time: " + __addon__.getSetting('welcome_timer')
+    print "Current Time: " + str(currtime)
+    if __addon__.getSetting('welcome_timer') == '' or int(__addon__.getSetting('welcome_timer')) <= currtime-3600: #14400
+        print "Showing Welcome message"
+        utils.TextBox()
+    __addon__.setSetting('welcome_timer', str(currtime))
     checkKaraokeSetting()
     #      name,                url,          mode,                     iconimage,               page, id, param1, param2=""):
     addDir(__language__(70000), 'search.php', 'searchArtists',          art('searchArtistName'), '0',0, '')

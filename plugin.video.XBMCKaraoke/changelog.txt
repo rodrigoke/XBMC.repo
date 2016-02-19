@@ -1,3 +1,6 @@
+v2.0.3
+- Had a brainfart
+
 v2.0.2
 - Added a welcome message popup, in sight of the new kodi version that is not compatible
 
